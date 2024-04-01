@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"UsersAPI/internal/domain"
 	"UsersAPI/internal/product"
 	"net/http"
 	"strconv"
@@ -31,4 +32,25 @@ func (h *Handler) GetUserById(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, user)
+}
+
+func (h *Handler) AddUser(ctx *gin.Context) {
+	var newUser domain.User
+
+	if err := ctx.BindJSON(&newUser); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Error while binding JSON - " + err.Error(),
+		})
+		return
+	}
+
+	user, err := h.Service.AddUser(newUser.Name, newUser.LastName, newUser.PlaceOfBirth, newUser.DateOfBirth, newUser.Email)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Error: - " + err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusCreated, user)
 }

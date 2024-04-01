@@ -63,8 +63,8 @@ func main() {
 	users := r.Group("users")
 	{
 		users.GET("/:id", handler.GetUserById)
+		users.POST("/add", handler.AddUser)
 	}
 
 	r.Run(":8080")
-
 }

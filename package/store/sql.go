@@ -22,3 +22,29 @@ func (s *Sql) GetUserById(id int) (*domain.User, error) {
 
 	return &user, nil
 }
+
+func(s *Sql) AddUser(name string, lastName string, placeOfBirth string, dateOfBirth string, email string) (*domain.User, error) {
+
+	query := "INSERT INTO users (name, lastName, place_of_birth, date_of_birth, email) VALUES (?, ?, ?, ?, ?)"
+
+	result, err := s.DB.Exec(query, name, lastName, placeOfBirth, dateOfBirth, email)
+	if err != nil {
+		return nil, err
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+
+	user := &domain.User{
+		Id: int(id),
+		Name: name,
+		LastName: lastName,
+		PlaceOfBirth: placeOfBirth,
+		DateOfBirth: dateOfBirth,
+		Email: email,
+	}
+
+	return user, nil
+}
