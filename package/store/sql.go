@@ -48,3 +48,45 @@ func(s *Sql) AddUser(name string, lastName string, placeOfBirth string, dateOfBi
 
 	return user, nil
 }
+
+func (s *Sql) UpdateUser(id int, user *domain.User) (*domain.User, error) {
+
+	query := "UPDATE users SET "
+
+	var values []interface{}
+
+	if user.Name != "" {
+		query += "name = ?, "
+		values = append(values, user.Name)
+	}
+
+	if user.LastName != "" {
+		query += "lastName = ?, "
+		values = append(values, user.LastName)
+	}
+
+	if user.PlaceOfBirth != "" {
+		query += "place_of_birth = ?, "
+		values = append(values, user.PlaceOfBirth)
+	}
+
+	if user.DateOfBirth != "" {
+		query += "date_of_birth = ?, "
+		values = append(values, user.DateOfBirth)
+	}
+
+	if user.Email != "" {
+		query += "email = ?"
+		values = append(values, user.Email)
+	}
+
+	query += " WHERE id = ?;"
+	values = append(values, id)
+
+	_, err := s.DB.Exec(query, values...)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}

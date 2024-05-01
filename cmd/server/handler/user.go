@@ -54,3 +54,35 @@ func (h *Handler) AddUser(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusCreated, user)
 }
+
+func (h *Handler) UpdateUser(ctx *gin.Context) {
+	var userUpdated domain.User
+
+	idParam := ctx.Param("id")
+	id, err := strconv.Atoi(idParam)
+	
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	if err := ctx.BindJSON(&userUpdated); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	user, err := h.Service.UpdateUser(id, &userUpdated)
+	
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+	}
+
+	ctx.JSON(http.StatusOK, user)
+
+}
