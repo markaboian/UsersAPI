@@ -18,7 +18,7 @@ func (h *Handler) GetUserById(ctx *gin.Context) {
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message":"Error al convertir el id - " + err.Error(),
+			"message": "Error: while converting id - " + err.Error(),
 		})
 		return
 	}
@@ -26,7 +26,7 @@ func (h *Handler) GetUserById(ctx *gin.Context) {
 	user, err := h.Service.GetUserById(id)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{
-			"message:": "Error: usuario no encontrado - " + err.Error(),
+			"message:": "Error: user not found - " + err.Error(),
 		})
 		return
 	}
@@ -47,7 +47,7 @@ func (h *Handler) AddUser(ctx *gin.Context) {
 	user, err := h.Service.AddUser(newUser.Name, newUser.LastName, newUser.PlaceOfBirth, newUser.DateOfBirth, newUser.Email)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": "Error: - " + err.Error(),
+			"message": "Error: while adding user - " + err.Error(),
 		})
 		return
 	}
@@ -63,14 +63,14 @@ func (h *Handler) UpdateUser(ctx *gin.Context) {
 	
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": err.Error(),
+			"message": "Error: while converting id - " + err.Error(),
 		})
 		return
 	}
 
 	if err := ctx.BindJSON(&userUpdated); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": err.Error(),
+			"message": "Error while binding JSON - " + err.Error(),
 		})
 		return
 	}
@@ -79,10 +79,33 @@ func (h *Handler) UpdateUser(ctx *gin.Context) {
 	
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": err.Error(),
+			"message": "Error: while updating user - " + err.Error(),
 		})
 	}
 
 	ctx.JSON(http.StatusOK, user)
 
+}
+
+func (h *Handler) DeleteUser(ctx *gin.Context) {
+	idParam := ctx.Param("id")
+	id, err := strconv.Atoi(idParam)
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Error: while converting id - " + err.Error(),
+		})
+		return
+	}
+
+	if err := h.Service.DeleteUser(id); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Error: while deleting user - " + err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "User deleted",
+	})
 }

@@ -65,6 +65,7 @@ func main() {
 		users.GET("/:id", handler.GetUserById)
 		users.POST("/add", handler.AddUser)
 		users.PATCH("/:id", handler.UpdateUser)
+		users.DELETE("/:id", handler.DeleteUser)
 	}
 
 	r.Run(":8080")

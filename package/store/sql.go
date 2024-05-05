@@ -90,3 +90,14 @@ func (s *Sql) UpdateUser(id int, user *domain.User) (*domain.User, error) {
 
 	return user, nil
 }
+
+func (s *Sql) DeleteUser(id int) error {
+	query := "DELETE FROM users WHERE id = ?"
+
+	_, err := s.DB.Exec(query, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
