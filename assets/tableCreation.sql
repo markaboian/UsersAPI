@@ -7,4 +7,4 @@ CREATE TABLE users (
     email VARCHAR(45) NOT NULL
 );
 
-INSERT INTO users (name, lastName, place_of_birth, date_of_birth, email) VALUES ("Mark", "Aboian", "Ciudad Autonoma de Buenos Aires, Argentina", "28/01/2002", "abomark09@gmail.com");
+INSERT INTO users (name, lastName, place_of_birth, date_of_birth, email) VALUES ("John", "Doe", "Los Angeles, California", "01/01/1999", "johndoe@gmail.com");
