@@ -68,5 +68,11 @@ func main() {
 		users.DELETE("/:id", handler.DeleteUser)
 	}
 
+	products := r.Group("products")
+	{
+		products.GET("/:id", handler.GetProductById)
+		products.POST("/add", handler.AddProduct)
+	}
+
 	r.Run(":8080")
 }

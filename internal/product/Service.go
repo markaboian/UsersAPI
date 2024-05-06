@@ -9,6 +9,10 @@ type IService interface {
 	AddUser(name string, lastName string, placeOfBirth string, dateOfBirth string, email string) (*domain.User, error)
 	UpdateUser(id int, user *domain.User) (*domain.User, error)
 	DeleteUser(id int) error
+
+	//Products methods
+	GetProductById(id int) (*domain.Product, error)
+	AddProduct(name string, price float64, userId int) (*domain.Product, error)
 }
 
 type Service struct {
@@ -49,4 +53,24 @@ func (s *Service) DeleteUser(id int) error {
 	}
 
 	return nil
+}
+
+// Products methods
+
+func (s *Service) GetProductById(id int) (*domain.Product, error) {
+	product, err := s.Repository.GetProductById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return product, nil
+}
+
+func (s *Service) AddProduct(name string, price float64, userId int) (*domain.Product, error) {
+	product, err := s.Repository.AddProduct(name, price, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	return product, nil
 }

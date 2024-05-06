@@ -109,3 +109,47 @@ func (h *Handler) DeleteUser(ctx *gin.Context) {
 		"message": "User deleted",
 	})
 }
+
+// Products methods
+
+func (h *Handler) GetProductById(ctx *gin.Context) {
+	idParam := ctx.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Error: while converting id - " + err.Error(),
+		})
+		return
+	}
+
+	product, err := h.Service.GetProductById(id)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"message": "Error: product not found - " + err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, product)
+}
+
+func (h *Handler) AddProduct(ctx *gin.Context) {
+	var newProduct domain.Product
+
+	if err := ctx.BindJSON(&newProduct); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Error: while binding json - " + err.Error(), 
+		})
+		return
+	}
+
+	product, err := h.Service.AddProduct(newProduct.Name, newProduct.Price, newProduct.UserId)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Error: while adding product - " + err.Error(), 
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusCreated, product)
+}

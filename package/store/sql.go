@@ -101,3 +101,43 @@ func (s *Sql) DeleteUser(id int) error {
 
 	return nil
 }
+
+// Products methods
+
+func (s *Sql) GetProductById(id int) (*domain.Product, error) {
+	var product domain.Product
+	query := "SELECT * FROM products WHERE id = ?"
+
+	
+	row := s.DB.QueryRow(query, id)
+	err := row.Scan(&product.Id, &product.Name, &product.Price, &product.UserId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &product, nil
+}
+
+func (s *Sql) AddProduct(name string, price float64, userId int) (*domain.Product, error) {
+	query := "INSERT INTO products (name, price, user_id) VALUES (?, ?, ?)"
+
+	result, err := s.DB.Exec(query, name, price, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+
+	product := &domain.Product{
+		Id: int(id),
+		Name: name,
+		Price: price,
+		UserId: userId,
+	}
+
+	return product, nil
+}

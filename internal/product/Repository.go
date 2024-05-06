@@ -10,6 +10,10 @@ type IRepository interface {
 	AddUser(name string, lastName string, placeOfBirth string, dateOfBirth string, email string) (*domain.User, error)
 	UpdateUser(id int, user *domain.User) (*domain.User, error)
 	DeleteUser(id int) error
+
+	//Products methods
+	GetProductById(id int) (*domain.Product, error)
+	AddProduct(name string, price float64, userId int) (*domain.Product, error)
 }
 
 type Repository struct {
@@ -50,4 +54,24 @@ func (r *Repository) DeleteUser(id int) error {
 	}
 
 	return nil
+}
+
+// Products methods
+
+func (r *Repository) GetProductById(id int) (*domain.Product, error) {
+	product, err := r.Interface.GetProductById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return product, nil
+}
+
+func (r *Repository) AddProduct(name string, price float64, userId int) (*domain.Product, error) {
+	product, err := r.Interface.AddProduct(name, price, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	return product, nil
 }
