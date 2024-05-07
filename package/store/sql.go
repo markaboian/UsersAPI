@@ -23,7 +23,7 @@ func (s *Sql) GetUserById(id int) (*domain.User, error) {
 	return &user, nil
 }
 
-func(s *Sql) AddUser(name string, lastName string, placeOfBirth string, dateOfBirth string, email string) (*domain.User, error) {
+func (s *Sql) AddUser(name string, lastName string, placeOfBirth string, dateOfBirth string, email string) (*domain.User, error) {
 
 	query := "INSERT INTO users (name, lastName, place_of_birth, date_of_birth, email) VALUES (?, ?, ?, ?, ?)"
 
@@ -38,12 +38,12 @@ func(s *Sql) AddUser(name string, lastName string, placeOfBirth string, dateOfBi
 	}
 
 	user := &domain.User{
-		Id: int(id),
-		Name: name,
-		LastName: lastName,
+		Id:           int(id),
+		Name:         name,
+		LastName:     lastName,
 		PlaceOfBirth: placeOfBirth,
-		DateOfBirth: dateOfBirth,
-		Email: email,
+		DateOfBirth:  dateOfBirth,
+		Email:        email,
 	}
 
 	return user, nil
@@ -108,7 +108,6 @@ func (s *Sql) GetProductById(id int) (*domain.Product, error) {
 	var product domain.Product
 	query := "SELECT * FROM products WHERE id = ?"
 
-	
 	row := s.DB.QueryRow(query, id)
 	err := row.Scan(&product.Id, &product.Name, &product.Price, &product.UserId)
 
@@ -133,11 +132,45 @@ func (s *Sql) AddProduct(name string, price float64, userId int) (*domain.Produc
 	}
 
 	product := &domain.Product{
-		Id: int(id),
-		Name: name,
-		Price: price,
+		Id:     int(id),
+		Name:   name,
+		Price:  price,
 		UserId: userId,
 	}
 
 	return product, nil
+}
+
+func (s *Sql) GetProductsByUserId(idUser int) (*[]domain.ProductWithUser, error) {
+	var productsWithUser []domain.ProductWithUser
+	
+	query := "SELECT * FROM products INNER JOIN users ON products.user_id = users.id WHERE users.id = ?"
+
+	rows, err := s.DB.Query(query, idUser)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var product domain.ProductWithUser
+		err := rows.Scan(
+			&product.ProductID, 
+			&product.ProductName, 
+			&product.ProductPrice, 
+			&product.ProductUserId,
+			&product.UserId,
+			&product.UserName,
+			&product.UserLastName,
+			&product.UserPlaceOfBirth,
+			&product.UserDateOfBirth,
+			&product.UserEmail,
+		)
+		if err != nil {
+			return nil, err
+		}
+		productsWithUser = append(productsWithUser, product)
+	}
+
+	return &productsWithUser, nil
+
 }

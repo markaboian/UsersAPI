@@ -153,3 +153,24 @@ func (h *Handler) AddProduct(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusCreated, product)
 }
+
+func (h *Handler) GetProductsByUserId(ctx *gin.Context) {
+	idParam := ctx.Param("id")
+	idUser, err := strconv.Atoi(idParam)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Error: while converting id - " + err.Error(),
+		})
+		return
+	}
+
+	productsWithUser, err := h.Service.GetProductsByUserId(idUser)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"message": "Error: products not found - " + err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, productsWithUser)
+}

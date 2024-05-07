@@ -13,6 +13,7 @@ type IService interface {
 	//Products methods
 	GetProductById(id int) (*domain.Product, error)
 	AddProduct(name string, price float64, userId int) (*domain.Product, error)
+	GetProductsByUserId(userId int) (*[]domain.ProductWithUser, error)
 }
 
 type Service struct {
@@ -73,4 +74,13 @@ func (s *Service) AddProduct(name string, price float64, userId int) (*domain.Pr
 	}
 
 	return product, nil
+}
+
+func (s *Service) GetProductsByUserId(userId int) (*[]domain.ProductWithUser, error) {
+	productsWithUser, err := s.Repository.GetProductsByUserId(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	return productsWithUser, nil
 }

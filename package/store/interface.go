@@ -11,4 +11,5 @@ type Interface interface {
 	// Product methods
 	GetProductById(id int) (*domain.Product, error)
 	AddProduct(name string, price float64, userId int) (*domain.Product, error)
+	GetProductsByUserId(userId int) (*[]domain.ProductWithUser, error)
 }

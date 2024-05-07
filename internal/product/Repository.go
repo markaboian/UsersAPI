@@ -14,6 +14,7 @@ type IRepository interface {
 	//Products methods
 	GetProductById(id int) (*domain.Product, error)
 	AddProduct(name string, price float64, userId int) (*domain.Product, error)
+	GetProductsByUserId(idUser int) (*[]domain.ProductWithUser, error)
 }
 
 type Repository struct {
@@ -74,4 +75,13 @@ func (r *Repository) AddProduct(name string, price float64, userId int) (*domain
 	}
 
 	return product, nil
+}
+
+func (r *Repository) GetProductsByUserId(userId int) (*[]domain.ProductWithUser, error) {
+	productsWithUser, err := r.Interface.GetProductsByUserId(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	return productsWithUser, nil
 }

@@ -72,6 +72,7 @@ func main() {
 	{
 		products.GET("/:id", handler.GetProductById)
 		products.POST("/add", handler.AddProduct)
+		products.GET("/user/:id", handler.GetProductsByUserId)
 	}
 
 	r.Run(":8080")
