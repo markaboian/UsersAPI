@@ -73,6 +73,7 @@ func main() {
 		products.GET("/:id", handler.GetProductById)
 		products.POST("/add", handler.AddProduct)
 		products.GET("/user/:id", handler.GetProductsByUserId)
+		products.PATCH("/:id", handler.UpdateProduct)
 	}
 
 	r.Run(":8080")

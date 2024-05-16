@@ -174,3 +174,34 @@ func (s *Sql) GetProductsByUserId(idUser int) (*[]domain.ProductWithUser, error)
 	return &productsWithUser, nil
 
 }
+
+func (s *Sql) UpdateProduct(id int, product *domain.Product) (*domain.Product, error) {
+	query := "UPDATE products SET "
+	var values []interface{}
+
+	if product.Name != "" {
+		query += "name = ?, "
+		values = append(values, product.Name)
+	}
+	
+	if product.Price != 0 {
+		query += "price = ?, "
+		values = append(values, product.Price)
+	}
+
+	if product.UserId != 0 {
+		query += "userId = ?, "
+	}
+
+	query = query[:len(query)-2]
+
+	query += " WHERE id = ?;"
+	values = append(values, id)
+	
+	_, err := s.DB.Exec(query, values...)
+	if err != nil {
+		return nil, err
+	}
+
+	return product, nil
+}

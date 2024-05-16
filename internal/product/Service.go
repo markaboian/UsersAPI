@@ -14,6 +14,7 @@ type IService interface {
 	GetProductById(id int) (*domain.Product, error)
 	AddProduct(name string, price float64, userId int) (*domain.Product, error)
 	GetProductsByUserId(userId int) (*[]domain.ProductWithUser, error)
+	UpdateProduct(id int, product *domain.Product) (*domain.Product, error)
 }
 
 type Service struct {
@@ -83,4 +84,13 @@ func (s *Service) GetProductsByUserId(userId int) (*[]domain.ProductWithUser, er
 	}
 
 	return productsWithUser, nil
+}
+
+func (s *Service) UpdateProduct(id int, product *domain.Product) (*domain.Product, error) {
+	product, err := s.Repository.UpdateProduct(id, product)
+	if err != nil {
+		return nil, err
+	}
+
+	return product, nil
 }

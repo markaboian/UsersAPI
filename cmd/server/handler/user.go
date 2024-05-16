@@ -174,3 +174,34 @@ func (h *Handler) GetProductsByUserId(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, productsWithUser)
 }
+
+func (h *Handler) UpdateProduct(ctx *gin.Context) {
+	var productUpdated domain.Product
+
+	idParam := ctx.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Error: while converting id - " + err.Error(), 
+		})
+		return
+	}
+
+	if err := ctx.BindJSON(&productUpdated); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Error: while binding json - " + err.Error(),
+		})
+		return
+	}
+
+	product, err := h.Service.UpdateProduct(id, &productUpdated)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Error: while updating product - " + err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, product)
+
+}
