@@ -205,3 +205,28 @@ func (h *Handler) UpdateProduct(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, product)
 
 }
+
+func (h *Handler) DeleteProduct(ctx *gin.Context) {
+
+	idParam := ctx.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message" : "Error: while converting id - " + err.Error(),
+		})
+		return
+	}
+
+	if err := h.Service.DeleteProduct(id); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Error: while deleting the product - " + err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Product deleted",
+	})
+
+
+}

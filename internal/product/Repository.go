@@ -16,6 +16,7 @@ type IRepository interface {
 	AddProduct(name string, price float64, userId int) (*domain.Product, error)
 	GetProductsByUserId(idUser int) (*[]domain.ProductWithUser, error)
 	UpdateProduct(id int, product *domain.Product) (*domain.Product, error)
+	DeleteProduct(id int) error
 }
 
 type Repository struct {
@@ -94,4 +95,13 @@ func (r *Repository) UpdateProduct(id int, product *domain.Product) (*domain.Pro
 	}
 
 	return product, nil
+}
+
+func (r *Repository) DeleteProduct(id int) error {
+	err := r.Interface.DeleteProduct(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

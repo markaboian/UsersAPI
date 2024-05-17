@@ -205,3 +205,14 @@ func (s *Sql) UpdateProduct(id int, product *domain.Product) (*domain.Product, e
 
 	return product, nil
 }
+
+func (s *Sql) DeleteProduct(id int) error {
+	query := "DELETE FROM products WHERE id = ?"
+
+	_, err := s.DB.Exec(query, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -74,6 +74,7 @@ func main() {
 		products.POST("/add", handler.AddProduct)
 		products.GET("/user/:id", handler.GetProductsByUserId)
 		products.PATCH("/:id", handler.UpdateProduct)
+		products.DELETE("/:id", handler.DeleteProduct)
 	}
 
 	r.Run(":8080")
